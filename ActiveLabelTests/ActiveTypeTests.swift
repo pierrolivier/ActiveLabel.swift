@@ -112,6 +112,11 @@ class ActiveTypeTests: XCTestCase {
         XCTAssertEqual(currentElementString, "userhandle")
         XCTAssertEqual(currentElementType, ActiveType.mention)
         
+        label.text = "@firstname.lastname"
+        XCTAssertEqual(activeElements.count, 1)
+        XCTAssertEqual(currentElementString, "firstname.lastname")
+        XCTAssertEqual(currentElementType, ActiveType.mention)
+        
         label.text = " .@userhandle"
         XCTAssertEqual(activeElements.count, 1)
         XCTAssertEqual(currentElementString, "userhandle")
