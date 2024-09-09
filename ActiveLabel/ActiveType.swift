@@ -17,11 +17,11 @@ enum ActiveElement {
     
     static func create(with activeType: ActiveType, text: String) -> ActiveElement {
         switch activeType {
-        case .mention: return mention(text)
-        case .hashtag: return hashtag(text)
-        case .email: return email(text)
-        case .url: return url(original: text, trimmed: text)
-        case .custom: return custom(text)
+        case .mention: return .mention(text)
+        case .hashtag: return .hashtag(text)
+        case .email: return .email(text)
+        case .url: return .url(original: text, trimmed: text)
+        case .custom: return .custom(text)
         }
     }
 }
@@ -58,11 +58,14 @@ extension ActiveType: Hashable, Equatable {
 
 public func ==(lhs: ActiveType, rhs: ActiveType) -> Bool {
     switch (lhs, rhs) {
-    case (.mention, .mention): return true
-    case (.hashtag, .hashtag): return true
-    case (.url, .url): return true
-    case (.email, .email): return true
-    case (.custom(let pattern1), .custom(let pattern2)): return pattern1 == pattern2
-    default: return false
+    case (.mention, .mention),
+         (.hashtag, .hashtag),
+         (.url, .url),
+         (.email, .email):
+        return true
+    case (.custom(let pattern1), .custom(let pattern2)):
+        return pattern1 == pattern2
+    default:
+        return false
     }
 }
