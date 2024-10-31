@@ -9,15 +9,18 @@
 import XCTest
 @testable import ActiveLabel
 
-extension ActiveElement: Equatable {}
-
 public func ==(a: ActiveElement, b: ActiveElement) -> Bool {
     switch (a, b) {
-    case (.mention(let a), .mention(let b)) where a == b: return true
-    case (.hashtag(let a), .hashtag(let b)) where a == b: return true
-    case (.url(let a), .url(let b)) where a == b: return true
-    case (.custom(let a), .custom(let b)) where a == b: return true
-    default: return false
+    case (.mention(let aValue), .mention(let bValue)) where aValue == bValue:
+        return true
+    case (.hashtag(let aValue), .hashtag(let bValue)) where aValue == bValue:
+        return true
+    case (.url(let originalA, let trimmedA), .url(let originalB, let trimmedB)) where originalA == originalB && trimmedA == trimmedB:
+        return true
+    case (.custom(let aValue), .custom(let bValue)) where aValue == bValue:
+        return true
+    default:
+        return false
     }
 }
 
@@ -204,7 +207,14 @@ class ActiveTypeTests: XCTestCase {
         XCTAssertEqual(currentElementType, ActiveType.url)
 
         label.text = "google.com"
-        XCTAssertEqual(activeElements.count, 0)
+        XCTAssertEqual(activeElements.count, 1)
+        XCTAssertEqual(currentElementString, "google.com")
+        XCTAssertEqual(currentElementType, ActiveType.url)
+        
+        label.text = "📺 Suivez le tirage au sort à partir de 10h45 ➡️ l-fff.co/40krN47"
+        XCTAssertEqual(activeElements.count, 1)
+        XCTAssertEqual(currentElementString, "l-fff.co/40krN47")
+        XCTAssertEqual(currentElementType, ActiveType.url)
     }
 
     func testCustomType() {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ActiveElement {
+enum ActiveElement: Equatable {
     case mention(String)
     case hashtag(String)
     case email(String)
