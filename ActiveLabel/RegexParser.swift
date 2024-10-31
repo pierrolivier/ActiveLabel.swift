@@ -13,10 +13,8 @@ struct RegexParser {
     static let hashtagPattern = "(?:^|\\s|$)#[\\p{L}0-9_]*"
     static let mentionPattern = "(?:^|\\s|$|[.])@[\\p{L}0-9_]+(?:\\.[\\p{L}0-9_]+)*"
     static let emailPattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-    static let urlPattern = "(^|[\\s.:;?\\-\\]<\\(])" 
-        + "((https?://|www\\.|pic\\.)[-\\w;/?:@&=+$\\|\\_.!~*\\|'()\\[\\]%#,☺]+[\\w/#](\\(\\))?)" 
-        + "(?=$|[\\s',\\|\\(\\).:;?\\-\\[\\]>\\)])"
-
+    static let urlPattern = "(^|[\\s.:;?\\-\\(])((https?://|www\\.|[a-zA-Z][a-zA-Z0-9+.-]*://)?[\\w-]+\\.[a-zA-Z]{2,}([\\w./?&%=+-]*[\\w/])?|([a-zA-Z][a-zA-Z0-9+.-]*://[\\w./?&%=+-]*))(?=$|[\\s.,:;?\\-\\)])"
+    
     private static var cachedRegularExpressions: [String: NSRegularExpression] = [:]
 
     static func getElements(from text: String, with pattern: String, range: NSRange) -> [NSTextCheckingResult] {

@@ -34,14 +34,18 @@ struct ActiveBuilder {
 
         for match in matches where match.range.length > 2 {
             let word = nsstring.substring(with: match.range).trimmingCharacters(in: .whitespacesAndNewlines)
-            let trimmedWord = (maximumLength != nil && word.count > maximumLength!) ? word.trim(to: maximumLength!) : word
-
-            if trimmedWord != word {
+            
+            let trimmedWord: String
+            if let maxLength = maximumLength, word.count > maxLength {
+                trimmedWord = word.trim(to: maxLength)
                 text = text.replacingOccurrences(of: word, with: trimmedWord)
+            } else {
+                trimmedWord = word
             }
-
+            
             let newRange = (text as NSString).range(of: trimmedWord)
-            let element = ActiveElement.url(original: word, trimmed: trimmedWord)
+            let validURL = word.contains("://") ? word : "https://\(word)"
+            let element = ActiveElement.url(original: validURL, trimmed: trimmedWord)
             elements.append((newRange, element, type))
         }
 

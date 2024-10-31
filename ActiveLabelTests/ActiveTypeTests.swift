@@ -9,21 +9,6 @@
 import XCTest
 @testable import ActiveLabel
 
-public func ==(a: ActiveElement, b: ActiveElement) -> Bool {
-    switch (a, b) {
-    case (.mention(let aValue), .mention(let bValue)) where aValue == bValue:
-        return true
-    case (.hashtag(let aValue), .hashtag(let bValue)) where aValue == bValue:
-        return true
-    case (.url(let originalA, let trimmedA), .url(let originalB, let trimmedB)) where originalA == originalB && trimmedA == trimmedB:
-        return true
-    case (.custom(let aValue), .custom(let bValue)) where aValue == bValue:
-        return true
-    default:
-        return false
-    }
-}
-
 class ActiveTypeTests: XCTestCase {
     
     let label = ActiveLabel()
@@ -198,22 +183,37 @@ class ActiveTypeTests: XCTestCase {
 
         label.text = "www.google.com"
         XCTAssertEqual(activeElements.count, 1)
-        XCTAssertEqual(currentElementString, "www.google.com")
+        XCTAssertEqual(currentElementString, "https://www.google.com")
         XCTAssertEqual(currentElementType, ActiveType.url)
         
         label.text = "pic.twitter.com/YUGdEbUx"
         XCTAssertEqual(activeElements.count, 1)
-        XCTAssertEqual(currentElementString, "pic.twitter.com/YUGdEbUx")
+        XCTAssertEqual(currentElementString, "https://pic.twitter.com/YUGdEbUx")
         XCTAssertEqual(currentElementType, ActiveType.url)
 
         label.text = "google.com"
         XCTAssertEqual(activeElements.count, 1)
-        XCTAssertEqual(currentElementString, "google.com")
+        XCTAssertEqual(currentElementString, "https://google.com")
         XCTAssertEqual(currentElementType, ActiveType.url)
         
         label.text = "📺 Suivez le tirage au sort à partir de 10h45 ➡️ l-fff.co/40krN47"
         XCTAssertEqual(activeElements.count, 1)
-        XCTAssertEqual(currentElementString, "l-fff.co/40krN47")
+        XCTAssertEqual(currentElementString, "https://l-fff.co/40krN47")
+        XCTAssertEqual(currentElementType, ActiveType.url)
+        
+        label.text = "usmontagnarde://posts/1234"
+        XCTAssertEqual(activeElements.count, 1)
+        XCTAssertEqual(currentElementString, "usmontagnarde://posts/1234")
+        XCTAssertEqual(currentElementType, ActiveType.url)
+        
+        label.text = "subdomain.domain.com"
+        XCTAssertEqual(activeElements.count, 1)
+        XCTAssertEqual(currentElementString, "https://subdomain.domain.com")
+        XCTAssertEqual(currentElementType, ActiveType.url)
+        
+        label.text = "https://subdomain.domain.com"
+        XCTAssertEqual(activeElements.count, 1)
+        XCTAssertEqual(currentElementString, "https://subdomain.domain.com")
         XCTAssertEqual(currentElementType, ActiveType.url)
     }
 
